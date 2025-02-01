@@ -1,0 +1,38 @@
+[package]
+edition = "2021"
+name    = "esp-led-test"
+version = "0.1.0"
+
+[[bin]]
+name = "esp-led-test"
+path = "./src/bin/main.rs"
+
+[dependencies]
+critical-section = "1.2.0"
+esp-alloc = { version = "0.6.0" }
+esp-backtrace = { version = "0.15.0", features = [
+  "esp32",
+  "exception-handler",
+  "panic-handler",
+  "println",
+] }
+esp-hal = { version = "0.23.1", features = ["esp32", "unstable"] }
+esp-println = { version = "0.13.0", features = ["esp32", "log"] }
+fugit = "0.3.7"
+log = { version = "0.4.21" }
+smart-leds = "0.4.0"
+ws2812-spi = "0.5.0"
+
+[profile.dev]
+# Rust debug is too slow.
+# For debug builds always builds with some optimization
+opt-level = "s"
+
+[profile.release]
+codegen-units    = 1     # LLVM can perform better optimizations using a single thread
+debug            = 2
+debug-assertions = false
+incremental      = false
+lto              = 'fat'
+opt-level        = 's'
+overflow-checks  = false
